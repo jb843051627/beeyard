@@ -41,12 +41,10 @@ func (s *AlertService) ListAlerts(ctx context.Context, apiaryID int64) ([]*model
 	if err != nil {
 		return nil, err
 	}
-	sorted := make([]*model.Alert, len(alerts))
-	copy(sorted, alerts)
-	sort.Slice(sorted, func(i, j int) bool {
-		return sorted[i].CreatedAt.After(sorted[j].CreatedAt)
+	sort.Slice(alerts, func(i, j int) bool {
+		return alerts[i].CreatedAt.After(alerts[j].CreatedAt)
 	})
-	return sorted, nil
+	return alerts, nil
 }
 
 // Acknowledge 确认告警。

@@ -15,3 +15,8 @@ beeyard.exe
 # Workspace clones (created by create端)
 beeyard-bug-*/
 beeyard-bug-*-*/
+
+# Deliverables (do not commit)
+beeyard-bug-*.md
+gold_check_report.md
+selfcheck_create_report.md

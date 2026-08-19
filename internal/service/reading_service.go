@@ -76,11 +76,11 @@ func (s *ReadingService) ExportCSV(ctx context.Context, apiaryID int64, from, to
 		return "", err
 	}
 	var sb strings.Builder
-	sb.WriteString("id,hive_id,sensor_type,value,recorded_at\n")
+	sb.WriteString("id,hive_id,sensor_type,value,timestamp\n")
 	for _, r := range readings {
+		ts := r.RecordedAt.UTC().Format("2006-01-02 15:04:05")
 		sb.WriteString(fmt.Sprintf("%d,%d,%s,%.2f,%s\n",
-			r.ID, r.HiveID, r.SensorType, r.Value,
-			r.RecordedAt.In(beeyardTZ).Format("2006-01-02 15:04:05")))
+			r.ID, r.HiveID, r.SensorType, r.Value, ts))
 	}
 	return sb.String(), nil
 }

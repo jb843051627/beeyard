@@ -62,6 +62,7 @@ func (h *ReadingHandler) ExportCSV(w http.ResponseWriter, r *http.Request) {
 		writeError(w, err)
 		return
 	}
+	w.Header().Set("Content-Type", "text/csv")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(csv))
 }

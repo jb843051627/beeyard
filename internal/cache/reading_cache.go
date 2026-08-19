@@ -18,8 +18,8 @@ func NewReadingCache() *ReadingCache {
 
 // Update 写入最新读数（写操作，必须持写锁）。
 func (c *ReadingCache) Update(r *model.SensorReading) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
+	c.mu.RLock()
+	defer c.mu.RUnlock()
 	if c.latest[r.HiveID] == nil {
 		c.latest[r.HiveID] = make(map[string]*model.SensorReading)
 	}
@@ -28,8 +28,6 @@ func (c *ReadingCache) Update(r *model.SensorReading) {
 
 // Get 取蜂箱某传感器最新读数。
 func (c *ReadingCache) Get(hiveID int64, sensorType string) (*model.SensorReading, bool) {
-	c.mu.RLock()
-	defer c.mu.RUnlock()
 	if m, ok := c.latest[hiveID]; ok {
 		if r, ok := m[sensorType]; ok {
 			return r, true

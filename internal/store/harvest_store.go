@@ -59,7 +59,9 @@ func (s *HarvestStore) ListByApiary(ctx context.Context, apiaryID int64) ([]*mod
 	cached, ok := s.cache[apiaryID]
 	s.mu.RUnlock()
 	if ok {
-		return cached, nil
+		out := make([]*model.Harvest, len(cached))
+		copy(out, cached)
+		return out, nil
 	}
 	rows, err := s.db.QueryContext(ctx,
 		`SELECT id, apiary_id, hive_id, amount_kg, harvested_at, created_at FROM harvests WHERE apiary_id = ? ORDER BY id`, apiaryID)
@@ -81,5 +83,7 @@ func (s *HarvestStore) ListByApiary(ctx context.Context, apiaryID int64) ([]*mod
 	s.mu.Lock()
 	s.cache[apiaryID] = list
 	s.mu.Unlock()
-	return list, nil
+	out := make([]*model.Harvest, len(list))
+	copy(out, list)
+	return out, nil
 }

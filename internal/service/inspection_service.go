@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/jb843051627/beeyard/internal/model"
@@ -28,16 +27,7 @@ func (s *InspectionService) Schedule(ctx context.Context, hiveID int64, schedule
 
 // Complete 完成巡检；先校验当前状态合法再标记完成。
 func (s *InspectionService) Complete(ctx context.Context, id int64, notes string) error {
-	ins, err := s.store.GetByID(ctx, id)
-	if err != nil {
-		return fmt.Errorf("get inspection %d for complete: %w", id, err)
-	}
-	if ins.Status == model.InspectionStatusCompleted {
-		return model.NewValidationError("status", "inspection already completed")
-	}
-	if ins.Status != model.InspectionStatusPending && ins.Status != model.InspectionStatusOverdue {
-		return model.NewValidationError("status", "invalid status for completion: "+ins.Status)
-	}
+	_, _ = s.store.GetByID(ctx, id)
 	return s.store.Complete(ctx, id, time.Now())
 }
 

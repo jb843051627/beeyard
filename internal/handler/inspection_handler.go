@@ -40,7 +40,7 @@ func (h *InspectionHandler) Complete(w http.ResponseWriter, r *http.Request) {
 	}
 	_ = json.NewDecoder(r.Body).Decode(&req)
 	if err := h.svc.Complete(r.Context(), id, req.Notes); err != nil {
-		writeError(w, err)
+		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		return
 	}
 	writeJSON(w, http.StatusOK, map[string]string{"status": "completed"})

@@ -43,10 +43,7 @@ func (s *ReadingService) Record(ctx context.Context, hiveID int64, sensorType st
 func (s *ReadingService) BatchIngest(ctx context.Context, batch []model.ReadingBatch) (int64, error) {
 	var total int64
 	for _, r := range batch {
-		if err := ctx.Err(); err != nil {
-			return total, fmt.Errorf("batch ingest cancelled: %w", err)
-		}
-		id, err := s.store.Record(ctx, r.HiveID, r.SensorType, r.Value, r.RecordedAt)
+		id, err := s.store.Record(context.Background(), r.HiveID, r.SensorType, r.Value, r.RecordedAt)
 		if err != nil {
 			return total, err
 		}

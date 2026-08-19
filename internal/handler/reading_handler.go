@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"context"
 	"encoding/json"
 	"net/http"
 	"strconv"
@@ -43,9 +42,7 @@ func (h *ReadingHandler) BatchIngest(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid body"})
 		return
 	}
-	ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
-	defer cancel()
-	total, err := h.svc.BatchIngest(ctx, batch)
+	total, err := h.svc.BatchIngest(r.Context(), batch)
 	if err != nil {
 		writeError(w, err)
 		return

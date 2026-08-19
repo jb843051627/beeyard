@@ -24,7 +24,7 @@ func (s *QueenStore) GetByID(ctx context.Context, id int64) (*model.Queen, error
 	var q model.Queen
 	err := row.Scan(&q.ID, &q.HiveID, &q.Breed, &q.Status, &q.MarkedAt, &q.CreatedAt)
 	if err == sql.ErrNoRows {
-		return nil, model.ErrQueenNotFound
+		return nil, nil
 	}
 	if err != nil {
 		return nil, fmt.Errorf("queen get by id: %w", err)

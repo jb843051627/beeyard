@@ -28,9 +28,26 @@ func (s *MaintenanceService) Create(ctx context.Context, hiveID int64, descripti
 	return s.store.Create(ctx, hiveID, description, scheduledFor)
 }
 
-// BatchCreate 批量创建维护任务。委托 store 的单事务批量方法，逐条出错即回滚。
+// BatchCreate 批量创建维护任务（自管理事务）。
 func (s *MaintenanceService) BatchCreate(ctx context.Context, tasks []model.MaintenanceTask) (int64, error) {
-	return s.store.BatchCreate(ctx, tasks)
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return 0, err
+	}
+	defer tx.Rollback()
+	var total int64
+	for _, t := range tasks {
+		res, err := tx.ExecContext(ctx,
+			`INSERT INTO maintenance_tasks(hive_id, description, scheduled_for) VALUES(?,?,?)`,
+			t.HiveID, t.Description, t.ScheduledFor)
+		if err != nil {
+			continue
+		}
+		n, _ := res.RowsAffected()
+		total += n
+	}
+	tx.Commit()
+	return total, nil
 }
 
 // Complete 完成维护任务。

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beeyard 蜂场监测</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><h1>Beeyard 蜂场蜂箱监测</h1></header>
+<main>
+  <section id="dashboards">
+    <div class="card"><h3>蜂箱总数</h3><p id="hive-count">-</p></div>
+    <div class="card"><h3>活跃告警</h3><p id="alert-count">-</p></div>
+    <div class="card"><h3>待巡检</h3><p id="inspect-count">-</p></div>
+  </section>
+  <section id="readings">
+    <h2>最新读数</h2>
+    <table id="reading-table"><thead><tr><th>蜂箱ID</th><th>类型</th><th>值</th><th>时间</th></tr></thead><tbody></tbody></table>
+  </section>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

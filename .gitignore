@@ -1,0 +1,17 @@
+# Binaries
+beeyard
+beeyard.exe
+*.exe
+
+# DB files
+*.db
+*.db-shm
+*.db-wal
+
+# IDE
+.idea/
+.vscode/
+
+# Workspace clones (created by create端)
+beeyard-bug-*/
+beeyard-bug-*-*/

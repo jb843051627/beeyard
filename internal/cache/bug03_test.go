@@ -8,8 +8,6 @@ import (
 	"github.com/jb843051627/beeyard/internal/model"
 )
 
-// TestBug03_CacheUpdateConcurrentSafe 验证：并发调用 Update 不会触发 data race。
-// 需以 go test -race -count=20 运行；RLock 写共享 map 会被 race detector 捕获。
 func TestBug03_CacheUpdateConcurrentSafe(t *testing.T) {
 	rc := NewReadingCache()
 	var wg sync.WaitGroup

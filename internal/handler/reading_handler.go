@@ -36,7 +36,7 @@ func (h *ReadingHandler) Record(w http.ResponseWriter, r *http.Request) {
 	writeCreated(w, id)
 }
 
-// BatchIngest 批量导入；为请求派生带超时的 context（bug-005 修复面）。
+// BatchIngest 批量导入。
 func (h *ReadingHandler) BatchIngest(w http.ResponseWriter, r *http.Request) {
 	var batch []model.ReadingBatch
 	if err := json.NewDecoder(r.Body).Decode(&batch); err != nil {

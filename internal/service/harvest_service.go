@@ -25,7 +25,7 @@ func (s *HarvestService) Record(ctx context.Context, h *model.Harvest) (int64, e
 	return s.store.Create(ctx, h)
 }
 
-// GenerateReport 生成采蜜报表，按采蜜量降序。store 返回副本，排序安全。
+// GenerateReport 生成采蜜报表，按采蜜量降序。
 func (s *HarvestService) GenerateReport(ctx context.Context, apiaryID int64) ([]*model.Harvest, error) {
 	list, err := s.store.ListByApiary(ctx, apiaryID)
 	if err != nil {

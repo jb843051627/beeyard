@@ -3,26 +3,27 @@ package service
 import (
 	"context"
 	"testing"
-
-	"github.com/jb843051627/beeyard/internal/model"
+	"time"
 )
 
-// TestBug02_ListAlertsSortDoesNotPolluteCache 验证：
-// service 对告警列表排序不会污染 store 缓存——
-// 排序后再查 store 应返回原始 id 升序，而非被排序后的顺序。
 func TestBug02_ListAlertsSortDoesNotPolluteCache(t *testing.T) {
 	st, svc := newTestService(t)
 	apiaryID := seedApiary(t, st)
 	hiveID := seedHive(t, st, apiaryID, "H-002")
 
 	ctx := context.Background()
+	db := st.DB()
 
-	// 创建 3 条告警（id 递增 = created_at 递增）
 	for i := 0; i < 3; i++ {
-		seedAlert(t, st, apiaryID, hiveID, model.AlertLevelInfo, "alert-"+string(rune('A'+i)))
+		_, err := db.ExecContext(ctx,
+			`INSERT INTO alerts(apiary_id, hive_id, level, message, status, created_at) VALUES(?,?,?,?,?,?)`,
+			apiaryID, hiveID, "info", "alert", "active",
+			time.Date(2024, 6, 1, 0, i, 0, 0, time.UTC))
+		if err != nil {
+			t.Fatal(err)
+		}
 	}
 
-	// 第一次从 store 获取原始顺序（id 升序）
 	first, err := st.Alerts.ListByApiary(ctx, apiaryID)
 	if err != nil {
 		t.Fatal(err)
@@ -31,13 +32,11 @@ func TestBug02_ListAlertsSortDoesNotPolluteCache(t *testing.T) {
 		t.Fatalf("expected 3 alerts, got %d", len(first))
 	}
 
-	// 调 service 排序（按 created_at 倒序）
 	_, err = svc.Alerts.ListAlerts(ctx, apiaryID)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	// 再次从 store 获取——应仍为 id 升序（未被排序污染）
 	second, err := st.Alerts.ListByApiary(ctx, apiaryID)
 	if err != nil {
 		t.Fatal(err)

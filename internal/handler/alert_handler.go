@@ -15,7 +15,7 @@ type AlertHandler struct {
 
 func NewAlertHandler(s *service.AlertService) *AlertHandler { return &AlertHandler{svc: s} }
 
-// Create 新建告警。错误经 writeError 映射：ValidationError→400（bug-004 修复面）。
+// Create 新建告警。
 func (h *AlertHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var a model.Alert
 	if err := json.NewDecoder(r.Body).Decode(&a); err != nil {

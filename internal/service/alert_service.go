@@ -35,7 +35,7 @@ func (s *AlertService) Create(ctx context.Context, a *model.Alert) (int64, error
 	return id, nil
 }
 
-// ListAlerts 按蜂场列告警，按创建时间倒序。store 返回副本，排序不污染缓存。
+// ListAlerts 按蜂场列告警，按创建时间倒序。
 func (s *AlertService) ListAlerts(ctx context.Context, apiaryID int64) ([]*model.Alert, error) {
 	alerts, err := s.store.ListByApiary(ctx, apiaryID)
 	if err != nil {

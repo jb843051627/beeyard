@@ -8,8 +8,6 @@ import (
 	"github.com/jb843051627/beeyard/internal/model"
 )
 
-// TestBug04_AlertCreateValidatesLevel 验证：Create 对无效级别返回
-// 可被 errors.As 识别的 ValidationError，而非泛化错误或静默成功。
 func TestBug04_AlertCreateValidatesLevel(t *testing.T) {
 	st, svc := newTestService(t)
 	apiaryID := seedApiary(t, st)

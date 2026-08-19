@@ -32,7 +32,7 @@ func (h *InspectionHandler) Schedule(w http.ResponseWriter, r *http.Request) {
 	writeCreated(w, id)
 }
 
-// Complete 完成巡检。错误经 writeError 映射：ValidationError→400（bug-009 修复面）。
+// Complete 完成巡检。
 func (h *InspectionHandler) Complete(w http.ResponseWriter, r *http.Request) {
 	id, _ := strconv.ParseInt(r.PathValue("id"), 10, 64)
 	var req struct {

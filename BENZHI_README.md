@@ -3,8 +3,8 @@
 ## 构建
 
 ```bash
-./build_benzhi_docker.sh beeyard-bug-1 linux/amd64
-./build_benzhi_docker.sh beeyard-bug-1 linux/arm64
+./build_benzhi_docker.sh beeyard-1 linux/amd64
+./build_benzhi_docker.sh beeyard-1 linux/arm64
 ```
 
 镜像名：`benzhi/<name>:latest`

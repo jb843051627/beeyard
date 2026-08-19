@@ -8,9 +8,6 @@ import (
 	"github.com/jb843051627/beeyard/internal/model"
 )
 
-// TestBug05_BatchIngestRespectsContextCancellation 验证：
-// 传入已取消的 context 时，BatchIngest 应立即返回 0 条已处理 + 错误，
-// 而非无视取消继续处理全部数据。
 func TestBug05_BatchIngestRespectsContextCancellation(t *testing.T) {
 	st, svc := newTestService(t)
 	apiaryID := seedApiary(t, st)

@@ -9,9 +9,6 @@ import (
 	"github.com/jb843051627/beeyard/internal/model"
 )
 
-// TestBug10_ExportCSVUsesCSTTimezone 验证：
-// ExportCSV 输出的时间应使用蜂场时区（CST UTC+8），
-// 而非 UTC——UTC 会导致时间偏移 8 小时。
 func TestBug10_ExportCSVUsesCSTTimezone(t *testing.T) {
 	st, svc := newTestService(t)
 	apiaryID := seedApiary(t, st)

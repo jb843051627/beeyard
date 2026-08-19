@@ -31,12 +31,10 @@ func (s *HarvestService) GenerateReport(ctx context.Context, apiaryID int64) ([]
 	if err != nil {
 		return nil, err
 	}
-	sorted := make([]*model.Harvest, len(list))
-	copy(sorted, list)
-	sort.Slice(sorted, func(i, j int) bool {
-		return sorted[i].AmountKg > sorted[j].AmountKg
+	sort.Slice(list, func(i, j int) bool {
+		return list[i].AmountKg > list[j].AmountKg
 	})
-	return sorted, nil
+	return list, nil
 }
 
 // ListByApiary 列出蜂场采蜜记录。

@@ -24,7 +24,7 @@ func (s *HiveStore) GetByID(ctx context.Context, id int64) (*model.Hive, error) 
 	var h model.Hive
 	err := row.Scan(&h.ID, &h.ApiaryID, &h.Code, &h.Status, &h.InstalledAt, &h.CreatedAt)
 	if err == sql.ErrNoRows {
-		return nil, model.ErrHiveNotFound
+		return nil, nil
 	}
 	if err != nil {
 		return nil, fmt.Errorf("hive get by id: %w", err)

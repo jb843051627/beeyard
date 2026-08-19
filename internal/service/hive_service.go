@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/jb843051627/beeyard/internal/model"
@@ -19,7 +20,10 @@ func NewHiveService(s *store.HiveStore) *HiveService {
 
 // Get 按 id 取蜂箱；不存在时返回包装错误，调用方可 errors.Is 区分。
 func (s *HiveService) Get(ctx context.Context, id int64) (*model.Hive, error) {
-	h, _ := s.store.GetByID(ctx, id)
+	h, err := s.store.GetByID(ctx, id)
+	if err != nil {
+		return nil, fmt.Errorf("hive service get %d: %w", id, err)
+	}
 	return h, nil
 }
 

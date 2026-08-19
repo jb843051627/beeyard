@@ -24,7 +24,7 @@ func (h *AlertHandler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 	id, err := h.svc.Create(r.Context(), &a)
 	if err != nil {
-		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		writeError(w, err)
 		return
 	}
 	writeCreated(w, id)

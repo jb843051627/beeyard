@@ -23,6 +23,11 @@ func (s *AlertService) Create(ctx context.Context, a *model.Alert) (int64, error
 	if a.Status == "" {
 		a.Status = model.AlertStatusActive
 	}
+	switch a.Level {
+	case model.AlertLevelInfo, model.AlertLevelWarning, model.AlertLevelCritical:
+	default:
+		return 0, model.NewValidationError("level", "invalid alert level: "+a.Level)
+	}
 	id, err := s.store.Create(ctx, a)
 	if err != nil {
 		return 0, fmt.Errorf("create alert: %w", err)

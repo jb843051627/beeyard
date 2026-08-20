@@ -20,6 +20,11 @@ func NewAlertService(s *store.AlertStore) *AlertService {
 
 // Create 新建告警；校验级别后入库，错误用 %w 包装以保留 errors.Is 链。
 func (s *AlertService) Create(ctx context.Context, a *model.Alert) (int64, error) {
+	switch a.Level {
+	case model.AlertLevelInfo, model.AlertLevelWarning, model.AlertLevelCritical:
+	default:
+		return 0, model.NewValidationError("level", "invalid alert level: "+a.Level)
+	}
 	if a.Status == "" {
 		a.Status = model.AlertStatusActive
 	}

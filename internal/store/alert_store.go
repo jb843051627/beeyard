@@ -59,7 +59,10 @@ func (s *AlertStore) ListByApiary(ctx context.Context, apiaryID int64) ([]*model
 	cached, ok := s.cache[apiaryID]
 	s.mu.RUnlock()
 	if ok {
-		return cached, nil
+		// 返回副本，避免调用方原地排序污染缓存。
+		out := make([]*model.Alert, len(cached))
+		copy(out, cached)
+		return out, nil
 	}
 	rows, err := s.db.QueryContext(ctx,
 		`SELECT id, apiary_id, hive_id, level, message, status, created_at FROM alerts WHERE apiary_id = ? ORDER BY id`, apiaryID)

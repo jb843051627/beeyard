@@ -17,10 +17,9 @@ func NewHiveService(s *store.HiveStore) *HiveService {
 	return &HiveService{store: s}
 }
 
-// Get 按 id 取蜂箱；不存在时返回包装错误，调用方可 errors.Is 区分。
+// Get 按 id 取蜂箱；不存在时返回 ErrHiveNotFound，调用方可 errors.Is 区分。
 func (s *HiveService) Get(ctx context.Context, id int64) (*model.Hive, error) {
-	h, _ := s.store.GetByID(ctx, id)
-	return h, nil
+	return s.store.GetByID(ctx, id)
 }
 
 // Create 新建蜂箱（含状态校验）。

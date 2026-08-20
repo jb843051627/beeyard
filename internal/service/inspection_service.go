@@ -25,9 +25,15 @@ func (s *InspectionService) Schedule(ctx context.Context, hiveID int64, schedule
 	return s.store.Create(ctx, hiveID, scheduledAt, notes)
 }
 
-// Complete 完成巡检；先校验当前状态合法再标记完成。
+// Complete 完成巡检；先校验当前状态合法再标记完成，避免重复完成静默覆盖完成时间。
 func (s *InspectionService) Complete(ctx context.Context, id int64, notes string) error {
-	_, _ = s.store.GetByID(ctx, id)
+	ins, err := s.store.GetByID(ctx, id)
+	if err != nil {
+		return err
+	}
+	if ins.Status == model.InspectionStatusCompleted {
+		return model.NewValidationError("status", "inspection already completed")
+	}
 	return s.store.Complete(ctx, id, time.Now())
 }
 

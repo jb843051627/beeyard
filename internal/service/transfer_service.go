@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/jb843051627/beeyard/internal/model"
@@ -28,7 +29,9 @@ func (s *TransferService) Create(ctx context.Context, hiveID, fromApiary, toApia
 
 // AssignQueen 在转场途中为蜂箱分配蜂王；校验蜂王存在。
 func (s *TransferService) AssignQueen(ctx context.Context, transferID, queenID int64) error {
-	_, _ = s.queens.GetByID(ctx, queenID)
+	if _, err := s.queens.GetByID(ctx, queenID); err != nil {
+		return fmt.Errorf("assign queen %d: %w", queenID, err)
+	}
 	return s.store.UpdateStatus(ctx, transferID, model.TransferStatusInTransit, nil)
 }
 

@@ -28,11 +28,11 @@ func (s *MaintenanceService) Create(ctx context.Context, hiveID int64, descripti
 	return s.store.Create(ctx, hiveID, description, scheduledFor)
 }
 
-// BatchCreate 批量创建维护任务（自管理事务）。
+// BatchCreate 批量创建维护任务（自管理事务）；任意一条失败即回滚整批。
 func (s *MaintenanceService) BatchCreate(ctx context.Context, tasks []model.MaintenanceTask) (int64, error) {
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
-		return 0, err
+		return 0, fmt.Errorf("begin tx: %w", err)
 	}
 	defer tx.Rollback()
 	var total int64
@@ -41,12 +41,14 @@ func (s *MaintenanceService) BatchCreate(ctx context.Context, tasks []model.Main
 			`INSERT INTO maintenance_tasks(hive_id, description, scheduled_for) VALUES(?,?,?)`,
 			t.HiveID, t.Description, t.ScheduledFor)
 		if err != nil {
-			continue
+			return 0, fmt.Errorf("batch create row: %w", err)
 		}
 		n, _ := res.RowsAffected()
 		total += n
 	}
-	tx.Commit()
+	if err := tx.Commit(); err != nil {
+		return 0, fmt.Errorf("commit batch: %w", err)
+	}
 	return total, nil
 }
 
